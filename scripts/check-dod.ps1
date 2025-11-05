@@ -1,6 +1,6 @@
 param(
   [string]$RepoRoot = (Resolve-Path ".").Path,
-  [string]$LogsGlob = "**/2-Logs/*",
+  [string[]]$LogsGlob = @('**/2-Logs/*')
   [switch]$VerboseOutput
 )
 $ErrorActionPreference = "Stop"
@@ -27,7 +27,7 @@ if($hits.Count -gt 0){
   # Ignore this checker file to avoid self-flagging
   $hits = $hits | ForEach-Object { "param(
   [string]$RepoRoot = (Resolve-Path ".").Path,
-  [string]$LogsGlob = "**/2-Logs/*",
+  [string[]]$LogsGlob = @('**/2-Logs/*')
   [switch]$VerboseOutput
 )
 $ErrorActionPreference = "Stop"
@@ -76,7 +76,7 @@ Write-Host "All Core checks completed."
 " }
   $hits = $hits | Where-Object { param(
   [string]$RepoRoot = (Resolve-Path ".").Path,
-  [string]$LogsGlob = "**/2-Logs/*",
+  [string[]]$LogsGlob = @('**/2-Logs/*')
   [switch]$VerboseOutput
 )
 $ErrorActionPreference = "Stop"
@@ -144,5 +144,6 @@ if(Test-Path $prMeta){
 }
 
 Write-Host "All Core checks completed."
+
 
 
