@@ -22,10 +22,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: PowerShell 7.4
-        uses: PowerShell/PowerShell@v1
-        with:
-          version: '7.4.x'
+      - name: Show PowerShell version (sanity)
+        shell: pwsh
+        run: '$PSVersionTable.PSVersion'
 
       - name: Definition of Done (Strict)
         shell: pwsh
@@ -43,7 +42,6 @@ jobs:
           $evt  = Get-Content $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
           $body = $evt.pull_request.body
 
-          # Fallback to PL.md when PR body is empty
           if (-not $body -or $body.Trim().Length -eq 0) {
             if (Test-Path .\PL.md) {
               Write-Host "PR body empty; falling back to PL.md"
@@ -51,17 +49,11 @@ jobs:
             }
           }
 
-          if (-not $body -or $body.Trim().Length -eq 0) {
-            Write-Error "PR body is empty and PL.md missing/empty."
-          }
+          if (-not $body -or $body.Trim().Length -eq 0) { Write-Error "PR body empty and PL.md missing/empty." }
 
-          # Require rubric keywords
           $hasRubric = ($body -match '(?i)Perfection\s*Loop') -or ($body -match '(?i)Rubric')
-          if (-not $hasRubric) {
-            Write-Error "Missing rubric section."
-          }
+          if (-not $hasRubric) { Write-Error "Missing rubric section." }
 
-          # Require PL-Score >= 9/10
           $m = [regex]::Match($body,'PL-Score:\s*(\d+)\s*/\s*10','IgnoreCase')
           if (-not $m.Success) { Write-Error "Missing PL-Score line (e.g., 'PL-Score: 10/10')." }
           $score = [int]$m.Groups[1].Value
