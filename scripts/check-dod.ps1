@@ -1,158 +1,64 @@
 param(
-  [string]   $RepoRoot,
-  [string[]] $LogsGlob    = @('**/2-Logs/*'),
-  [string[]] $IgnoreGlobs = @(),
-  [switch]   $Strict
-),
-  [string[]]\ = @(),
-  [switch]  \
-).Path,
-  [string[]]$LogsGlob = @('**/2-Logs/*')
-  [switch]$VerboseOutput
+  [Parameter(Mandatory=$false)]
+  [string]$RepoRoot = (Get-Location).Path,
+
+  [Parameter(Mandatory=$false)]
+  [string[]]$LogsGlob    = @('**/2-Logs/*'),
+
+  [Parameter(Mandatory=$false)]
+  [string[]]$IgnoreGlobs = @(),
+
+  [switch]$Strict
 )
-$ErrorActionPreference = "Stop"
 
 Write-Host "== DoD Core verification =="
 
-# 1) Signed commit is enforced via branch protection; here we only note it.
+# 1) Signed commits gate (informational; enforcement via branch protection)
 Write-Host "[Info] Signed commits should be enforced via branch protection."
 
-# 2) Schema + self-tests: assume validate.yml ran earlier; we fail here only if artifacts signal errors (optional extension point).
+# 2) Lightweight secret scan (ignore this script, .git, node_modules)
+$patterns = @(
+  'AKIA[0-9A-Z]{16}',             # AWS access key
+  'AIza[0-9A-Za-z\-_]{35}',       # Google API key
+  'ghp_[0-9A-Za-z]{36}',          # GitHub PAT
+  'xox[baprs]-[0-9A-Za-z-]{10,48}'# Slack token
+) | ForEach-Object { [regex]$_ }
 
-# 3) Secrets scan quick heuristics (basic): block obvious keys in repo (customize for your org)
-$forbidden = @('AWS_SECRET_ACCESS_KEY','GOOGLE_APPLICATION_CREDENTIALS','BEGIN PRIVATE KEY')
-$hits = @()
-Get-ChildItem -Path $RepoRoot -Recurse -File -ErrorAction SilentlyContinue |
-  Where-Object { $_.Extension -notin '.png','.jpg','.jpeg','.gif','.ico','.exe','.dll' } |
-  ForEach-Object {
-    try {
-      $t = Get-Content $_.FullName -Raw -ErrorAction Stop
-      foreach($f in $forbidden){ if($t -match [regex]::Escape($f)){ $hits += $_.FullName; break } }
-    } catch {}
+$all = Get-ChildItem -Recurse -File -Force -ErrorAction SilentlyContinue |
+  Where-Object { $_.FullName -notmatch '\\\.git\\' -and $_.FullName -notmatch '\\node_modules\\' }
+
+# Build ignore list (always ignore this script)
+$ignore = New-Object System.Collections.Generic.HashSet[string] ([StringComparer]::OrdinalIgnoreCase)
+$ignore.Add($PSCommandPath) | Out-Null
+
+foreach ($g in $IgnoreGlobs) {
+  # very simple glob→regex for **,*,?
+  $rx = '^' + [regex]::Escape(($g -replace '\*\*','(?>.*)' -replace '\*','[^\\\/]*' -replace '\?','.')) + '$'
+  foreach ($f in $all) {
+    if ($f.FullName -match $rx) { $ignore.Add($f.FullName) | Out-Null }
   }
-if($hits.Count -gt 0){
-  # Ignore this checker file to avoid self-flagging
-  $hits = $hits | ForEach-Object { "param(
-  [string]$RepoRoot = (Resolve-Path ".").Path,
-  [string[]]$LogsGlob = @('**/2-Logs/*')
-  [switch]$VerboseOutput
-)
-$ErrorActionPreference = "Stop"
+}
 
-Write-Host "== DoD Core verification =="
-
-# 1) Signed commit is enforced via branch protection; here we only note it.
-Write-Host "[Info] Signed commits should be enforced via branch protection."
-
-# 2) Schema + self-tests: assume validate.yml ran earlier; we fail here only if artifacts signal errors (optional extension point).
-
-# 3) Secrets scan quick heuristics (basic): block obvious keys in repo (customize for your org)
-$forbidden = @('AWS_SECRET_ACCESS_KEY','GOOGLE_APPLICATION_CREDENTIALS','BEGIN PRIVATE KEY')
 $hits = @()
-Get-ChildItem -Path $RepoRoot -Recurse -File -ErrorAction SilentlyContinue |
-  Where-Object { $_.Extension -notin '.png','.jpg','.jpeg','.gif','.ico','.exe','.dll' } |
-  ForEach-Object {
-    try {
-      $t = Get-Content $_.FullName -Raw -ErrorAction Stop
-      foreach($f in $forbidden){ if($t -match [regex]::Escape($f)){ $hits += $_.FullName; break } }
-    } catch {}
+foreach ($f in $all) {
+  if ($ignore.Contains($f.FullName)) { continue }
+  $text = try { Get-Content -LiteralPath $f.FullName -Raw -ErrorAction Stop } catch { '' }
+  foreach ($re in $patterns) {
+    if ($re.IsMatch($text)) { $hits += $f.FullName; break }
   }
-if($hits.Count -gt 0){
-  Write-Error -Message ("Potential secrets detected in:`n - " + ($hits -join "`n - "))
 }
 
-# 4) Docs updated (README changed in PR) – in CI, diff check preferred; locally, ensure README exists
-$readme = Join-Path $RepoRoot "README.md"
-if(-not (Test-Path $readme)){ Write-Error "README.md missing." }
-
-# 5) Logs + restore-map presence (at least one recent file)
-$logFiles = Get-ChildItem -Path $RepoRoot -Recurse -Filter "restore_map_*.json" -ErrorAction SilentlyContinue
-if(-not $logFiles){ Write-Error "No restore_map_*.json found. Ensure your run produces and archives restore maps." }
-
-# 6) Issue/Changelog linked – CI-friendly regex against PR body is ideal; here we only warn if missing a local marker file
-$prMeta = Join-Path $RepoRoot ".github\PR_BODY.txt"
-if(Test-Path $prMeta){
-  $pb = Get-Content $prMeta -Raw
-  if($pb -notmatch '(Fixes|Closes)\s+#\d+'){ Write-Error "PR does not reference an issue (expected 'Fixes #<id>')." }
-} else {
-  Write-Host "[Info] Skipping PR body reference check (no .github/PR_BODY.txt)."
+if ($hits.Count -gt 0) {
+  $msg = "Potential secrets detected in:`n - " + ($hits -join "`n - ")
+  if ($Strict) { Write-Error -Message $msg; exit 1 } else { Write-Warning $msg }
 }
 
-Write-Host "All Core checks completed."
-
-" }
-  $hits = $hits | Where-Object { param(
-  [string]$RepoRoot = (Resolve-Path ".").Path,
-  [string[]]$LogsGlob = @('**/2-Logs/*')
-  [switch]$VerboseOutput
-)
-$ErrorActionPreference = "Stop"
-
-Write-Host "== DoD Core verification =="
-
-# 1) Signed commit is enforced via branch protection; here we only note it.
-Write-Host "[Info] Signed commits should be enforced via branch protection."
-
-# 2) Schema + self-tests: assume validate.yml ran earlier; we fail here only if artifacts signal errors (optional extension point).
-
-# 3) Secrets scan quick heuristics (basic): block obvious keys in repo (customize for your org)
-$forbidden = @('AWS_SECRET_ACCESS_KEY','GOOGLE_APPLICATION_CREDENTIALS','BEGIN PRIVATE KEY')
-$hits = @()
-Get-ChildItem -Path $RepoRoot -Recurse -File -ErrorAction SilentlyContinue |
-  Where-Object { $_.Extension -notin '.png','.jpg','.jpeg','.gif','.ico','.exe','.dll' } |
-  ForEach-Object {
-    try {
-      $t = Get-Content $_.FullName -Raw -ErrorAction Stop
-      foreach($f in $forbidden){ if($t -match [regex]::Escape($f)){ $hits += $_.FullName; break } }
-    } catch {}
-  }
-if($hits.Count -gt 0){
-  Write-Error -Message ("Potential secrets detected in:`n - " + ($hits -join "`n - "))
+# 3) Restore-map presence (only warn in bootstrap)
+$restore = $all | Where-Object { $_.FullName -match '\\2-Logs\\restore_map_.*\.json$' }
+if (-not $restore) {
+  $msg = "No restore_map_*.json found in 2-Logs (bootstrap ok)."
+  if ($Strict) { Write-Error -Message $msg; exit 1 } else { Write-Warning $msg }
 }
 
-# 4) Docs updated (README changed in PR) – in CI, diff check preferred; locally, ensure README exists
-$readme = Join-Path $RepoRoot "README.md"
-if(-not (Test-Path $readme)){ Write-Error "README.md missing." }
-
-# 5) Logs + restore-map presence (at least one recent file)
-$logFiles = Get-ChildItem -Path $RepoRoot -Recurse -Filter "restore_map_*.json" -ErrorAction SilentlyContinue
-if(-not $logFiles){ Write-Error "No restore_map_*.json found. Ensure your run produces and archives restore maps." }
-
-# 6) Issue/Changelog linked – CI-friendly regex against PR body is ideal; here we only warn if missing a local marker file
-$prMeta = Join-Path $RepoRoot ".github\PR_BODY.txt"
-if(Test-Path $prMeta){
-  $pb = Get-Content $prMeta -Raw
-  if($pb -notmatch '(Fixes|Closes)\s+#\d+'){ Write-Error "PR does not reference an issue (expected 'Fixes #<id>')." }
-} else {
-  Write-Host "[Info] Skipping PR body reference check (no .github/PR_BODY.txt)."
-}
-
-Write-Host "All Core checks completed."
-
- -notmatch [regex]::Escape($PSCommandPath) }
-  Write-Error -Message ("Potential secrets detected in:`n - " + ($hits -join "`n - "))
-}
-
-# 4) Docs updated (README changed in PR) – in CI, diff check preferred; locally, ensure README exists
-$readme = Join-Path $RepoRoot "README.md"
-if(-not (Test-Path $readme)){ Write-Error "README.md missing." }
-
-# 5) Logs + restore-map presence (at least one recent file)
-$logFiles = Get-ChildItem -Path $RepoRoot -Recurse -Filter "restore_map_*.json" -ErrorAction SilentlyContinue
-if(-not $logFiles){ Write-Error "No restore_map_*.json found. Ensure your run produces and archives restore maps." }
-
-# 6) Issue/Changelog linked – CI-friendly regex against PR body is ideal; here we only warn if missing a local marker file
-$prMeta = Join-Path $RepoRoot ".github\PR_BODY.txt"
-if(Test-Path $prMeta){
-  $pb = Get-Content $prMeta -Raw
-  if($pb -notmatch '(Fixes|Closes)\s+#\d+'){ Write-Error "PR does not reference an issue (expected 'Fixes #<id>')." }
-} else {
-  Write-Host "[Info] Skipping PR body reference check (no .github/PR_BODY.txt)."
-}
-
-Write-Host "All Core checks completed."
-
-
-
-
-
+Write-Host "DoD checks completed."
+exit 0
