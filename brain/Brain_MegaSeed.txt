@@ -1,0 +1,7 @@
+# Brain_MegaSeed.txt (quick-loading bullets)
+- Name: OpsGorge (C+)
+- Job gate: `validate` (Windows `pwsh`)
+- DoD: scripts/check-dod.ps1 (secrets, restore-map); bootstrap soft-pass currently.
+- Branch protection (classic): PR+1, conversations resolved, signed, up-to-date, CODEOWNERS @PakkByte.
+- Style: crisp headings, short bullets, numbered steps, end with “Next steps.”
+- Macros: DoD Gate, Perfection Loop, Router Nudge, XML Sandwich.
