@@ -9,35 +9,35 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # TODO: replace with your real schema/self-tests when ready
+      # Placeholder self-tests (replace later with your real script)
       - name: Schema + self-tests (placeholder)
         shell: pwsh
         run: |
           Write-Host 'Schema/self-tests placeholder running...'
-          # Example later: pwsh -File .\platform\scripts\Invoke-SelfTests.ps1
 
       - name: Enforce Definition of Done (Core)
         shell: pwsh
         env:
-          CI_BOOTSTRAP: 1
+          CI_BOOTSTRAP: "1"   # allow soft-pass during bootstrap
         run: |
           Write-Host "Listing repo to verify script path..."
-          Get-ChildItem -Recurse scripts | Format-List -Property FullName, Length
+          Get-ChildItem -Recurse -Force | Where-Object { .FullName -match '\\scripts\\check-dod.ps1$' } | ForEach-Object { .FullName }
 
           # Run DoD and capture exit code
           pwsh -File .\scripts\check-dod.ps1 -RepoRoot D:\Repos\OpsGorge
            = 0
 
           if ( -ne 0) {
-            if () {
+            if ( -eq "1") {
               Write-Host "Bootstrap soft-pass (check-dod exited )."
               exit 0
             } else {
-              Write-Host "DoD failed with exit code ."
+              Write-Error "DoD failed with exit code ."
               exit 
             }
           } else {
