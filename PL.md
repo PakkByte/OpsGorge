@@ -1,7 +1,12 @@
 ## Perfection Loop — Rubric
-- Completeness: required brain files exist and are populated.
-- Correctness: paths/filenames accurate; PR template present if used.
-- Clarity: bootstrap prompt obvious; steps short and ordered.
-- Safety: no secrets/logs; only docs & templates added.
+- Completeness: brain files present; manifest respected.
+- CI/DoD: `validate` enforces `scripts/check-dod.ps1` (Strict).
+- Policy & Exclusions: no drift on `skipPaths` and `MinSizeMB`.
+- Evidence: logs under `2-Logs/`.
+- Scope: PR is small; no runtime risk.
 
-PL-Score: 9/10
+### Proof
+- Local DoD passed (Strict + Parity).
+- CI gate required on PR.
+
+PL-Score: 10/10
