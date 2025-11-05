@@ -1,15 +1,14 @@
-## Summary
-What changed and why?
+## Perfection Loop — Rubric
+(Write 3–5 criteria specific to this change. Example)
+- Completeness: covers scope and edge-cases.
+- Correctness: commands/paths/toggles verified.
+- Clarity: crisp headings, short bullets, numbered steps, “Next steps”.
+- Safety: guardrails honored; no secrets/logs committed.
+- Tests/CI: validate job green; DoD passes.
 
-## Self-Audit (Core must pass)
-- [ ] Signed commit to protected `main` (or PR target)
-- [ ] CI schema + self-tests passed
-- [ ] No secrets / least-privilege confirmed
-- [ ] README/runbook updated
-- [ ] Logs + restore-map present (link below)
-- [ ] Issue/Changelog linked
+**PL-Score: 9/10**  <!-- raise to 10/10 when truly perfect -->
 
-## Evidence
-- CI run: <link>
-- Logs/restore-map: <link>
-- Fixes: #<issue>
+## Checklist
+- [ ] CI `Validate (C+ Gate)` is green
+- [ ] DoD (Strict) passes
+- [ ] Conversations resolved; minimal diff; docs updated if behavior changed

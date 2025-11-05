@@ -1,4 +1,4 @@
-name: OpsGorge — Validate Policy & Self-Tests
+name: OpsGorge - Validate (Enforced)
 
 on:
   pull_request:
@@ -6,41 +6,55 @@ on:
 
 jobs:
   validate:
+    name: Validate (C+ Gate)
     runs-on: windows-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Schema + self-tests (placeholder)
+      # --- Perfection Loop gate ---
+      # This enforces that the PR description includes a rubric section and a final self-score >= 9/10.
+      - name: Perfection Loop gate (rubric + score)
         shell: pwsh
         run: |
-          Write-Host "Schema/self-tests placeholder running..."
+          $evt = Get-Content $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
+          $body = [string]$evt.pull_request.body
+          if ([string]::IsNullOrWhiteSpace($body)) {
+            Write-Error "PR body is empty. Add your Perfection Loop rubric + final score."
+            exit 1
+          }
 
-      - name: Enforce Definition of Done (Core)
+          # Require a rubric header and a final score pattern like: "PL-Score: 9/10" (>=9)
+          $hasRubric = $body -match '(?im)^\s*##\s*Perfection Loop\s*—?\s*Rubric'
+          $scoreMatch = [regex]::Match($body, '(?im)PL-Score:\s*(\d+)\s*/\s*10')
+          if(-not $hasRubric) {
+            Write-Error "Missing rubric section. Add a '## Perfection Loop — Rubric' section to the PR body."
+            exit 1
+          }
+          if(-not $scoreMatch.Success) {
+            Write-Error "Missing PL-Score. Add 'PL-Score: 9/10' (or higher) to the PR body."
+            exit 1
+          }
+          $score = [int]$scoreMatch.Groups[1].Value
+          if($score -lt 9) {
+            Write-Error "PL-Score too low ($score/10). Iterate until ≥ 9/10."
+            exit 1
+          }
+          Write-Host "Perfection Loop gate OK (score: $score/10)."
+
+      # --- DoD enforcement (strict) ---
+      - name: Enforce Definition of Done (Strict)
         shell: pwsh
-        env:
-          CI_BOOTSTRAP: "1"   # keep soft-pass during bootstrap
         run: |
-          $target = Join-Path $env:GITHUB_WORKSPACE 'scripts\check-dod.ps1'
-          if (-not (Test-Path $target)) {
-            Write-Host "DoD script NOT found: $target (bootstrap soft-pass)"
-            exit 0
+          $script = Join-Path $env:GITHUB_WORKSPACE 'scripts\check-dod.ps1'
+          if (-not (Test-Path $script)) {
+            Write-Error "DoD script not found at $script"
+            exit 1
           }
-
-          pwsh -File $target -RepoRoot $env:GITHUB_WORKSPACE
-          $code = $LASTEXITCODE
-
-          if ($code -ne 0) {
-            if ($env:CI_BOOTSTRAP -eq "1") {
-              Write-Host "Bootstrap soft-pass (check-dod exited $code)."
-              exit 0
-            } else {
-              Write-Error "DoD failed with exit code $code."
-              exit $code
-            }
-          } else {
-            Write-Host "DoD passed."
+          pwsh -File $script -RepoRoot $env:GITHUB_WORKSPACE -Strict
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "DoD failed (Strict)."
+            exit $LASTEXITCODE
           }
+          Write-Host "DoD passed (Strict)."
