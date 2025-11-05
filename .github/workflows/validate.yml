@@ -25,11 +25,16 @@ jobs:
         env:
           CI_BOOTSTRAP: "1"   # allow soft-pass during bootstrap
         run: |
-          Write-Host "Listing repo to verify script path..."
-          Get-ChildItem -Recurse -Force | Where-Object { .FullName -match '\\scripts\\check-dod.ps1$' } | ForEach-Object { .FullName }
+          Write-Host "Checking for scripts\check-dod.ps1..."
+           = Join-Path D:\Repos\OpsGorge 'scripts\check-dod.ps1'
+          if (-not (Test-Path )) {
+            Write-Host "Not found: "
+          } else {
+            Write-Host "Found: "
+          }
 
           # Run DoD and capture exit code
-          pwsh -File .\scripts\check-dod.ps1 -RepoRoot D:\Repos\OpsGorge
+          pwsh -File  -RepoRoot D:\Repos\OpsGorge
            = 0
 
           if ( -ne 0) {
