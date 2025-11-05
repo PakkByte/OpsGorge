@@ -6,7 +6,7 @@ on:
 
 jobs:
   validate:
-    name: Validate (C+ Gate)
+    name: validate
     runs-on: windows-latest
 
     steps:
@@ -58,3 +58,4 @@ jobs:
             exit $LASTEXITCODE
           }
           Write-Host "DoD passed (Strict)."
+
