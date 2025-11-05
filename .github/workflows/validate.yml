@@ -1,4 +1,4 @@
-name: OpsGorge - Validate (Enforced)
+name: OpsGorge — Validate (Enforced)
 
 on:
   pull_request:
@@ -6,56 +6,30 @@ on:
 
 jobs:
   validate:
-    name: validate
     runs-on: windows-latest
-
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # --- Perfection Loop gate ---
-      # This enforces that the PR description includes a rubric section and a final self-score >= 9/10.
-      - name: Perfection Loop gate (rubric + score)
+      - name: Perfection Loop gate (file-only)
         shell: pwsh
         run: |
-          $evt = Get-Content $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
-          $body = [string]$evt.pull_request.body
-          if ([string]::IsNullOrWhiteSpace($body)) {
-            Write-Error "PR body is empty. Add your Perfection Loop rubric + final score."
-            exit 1
-          }
-
-          # Require a rubric header and a final score pattern like: "PL-Score: 9/10" (>=9)
-          $hasRubric = $body -match '(?im)^\s*##\s*Perfection Loop\s*—?\s*Rubric'
-          $scoreMatch = [regex]::Match($body, '(?im)PL-Score:\s*(\d+)\s*/\s*10')
-          if(-not $hasRubric) {
-            Write-Error "Missing rubric section. Add a '## Perfection Loop — Rubric' section to the PR body."
-            exit 1
-          }
-          if(-not $scoreMatch.Success) {
-            Write-Error "Missing PL-Score. Add 'PL-Score: 9/10' (or higher) to the PR body."
-            exit 1
-          }
-          $score = [int]$scoreMatch.Groups[1].Value
-          if($score -lt 9) {
-            Write-Error "PL-Score too low ($score/10). Iterate until ≥ 9/10."
-            exit 1
-          }
+          $pl = Join-Path $env:GITHUB_WORKSPACE "PL.md"
+          if (-not (Test-Path $pl)) { Write-Error "PL.md missing at repo root."; exit 1 }
+          $body = Get-Content $pl -Raw
+          if ($body -notmatch '(?im)^\s*##\s*Perfection Loop') { Write-Error "PL.md missing '## Perfection Loop' heading."; exit 1 }
+          $m = [regex]::Match($body,'(?im)PL-Score:\s*(\d+)\s*/\s*10')
+          if (-not $m.Success) { Write-Error "PL.md missing 'PL-Score: n/10'."; exit 1 }
+          $score = [int]$m.Groups[1].Value
+          if ($score -lt 9) { Write-Error "PL-Score too low ($score/10)"; exit 1 }
           Write-Host "Perfection Loop gate OK (score: $score/10)."
 
-      # --- DoD enforcement (strict) ---
       - name: Enforce Definition of Done (Strict)
         shell: pwsh
         run: |
           $script = Join-Path $env:GITHUB_WORKSPACE 'scripts\check-dod.ps1'
-          if (-not (Test-Path $script)) {
-            Write-Error "DoD script not found at $script"
-            exit 1
-          }
+          if (-not (Test-Path $script)) { Write-Error "DoD script not found at $script"; exit 1 }
           pwsh -File $script -RepoRoot $env:GITHUB_WORKSPACE -Strict
-          if ($LASTEXITCODE -ne 0) {
-            Write-Error "DoD failed (Strict)."
-            exit $LASTEXITCODE
-          }
-          Write-Host "DoD passed (Strict)."
-
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

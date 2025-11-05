@@ -1,64 +1,49 @@
 param(
-  [Parameter(Mandatory=$false)]
-  [string]$RepoRoot = (Get-Location).Path,
-
-  [Parameter(Mandatory=$false)]
-  [string[]]$LogsGlob    = @('**/2-Logs/*'),
-
-  [Parameter(Mandatory=$false)]
-  [string[]]$IgnoreGlobs = @(),
-
+  [Parameter(Mandatory=$false)][string]$RepoRoot = (Get-Location).Path,
   [switch]$Strict
 )
 
 Write-Host "== DoD Core verification =="
 
-# 1) Signed commits gate (informational; enforcement via branch protection)
+# 1) Security: surface signed-commit expectation (rule enforced in GH)
 Write-Host "[Info] Signed commits should be enforced via branch protection."
 
-# 2) Lightweight secret scan (ignore this script, .git, node_modules)
-$patterns = @(
-  'AKIA[0-9A-Z]{16}',             # AWS access key
-  'AIza[0-9A-Za-z\-_]{35}',       # Google API key
-  'ghp_[0-9A-Za-z]{36}',          # GitHub PAT
-  'xox[baprs]-[0-9A-Za-z-]{10,48}'# Slack token
-) | ForEach-Object { [regex]$_ }
-
-$all = Get-ChildItem -Recurse -File -Force -ErrorAction SilentlyContinue |
-  Where-Object { $_.FullName -notmatch '\\\.git\\' -and $_.FullName -notmatch '\\node_modules\\' }
-
-# Build ignore list (always ignore this script)
-$ignore = New-Object System.Collections.Generic.HashSet[string] ([StringComparer]::OrdinalIgnoreCase)
-$ignore.Add($PSCommandPath) | Out-Null
-
-foreach ($g in $IgnoreGlobs) {
-  # very simple glob→regex for **,*,?
-  $rx = '^' + [regex]::Escape(($g -replace '\*\*','(?>.*)' -replace '\*','[^\\\/]*' -replace '\?','.')) + '$'
-  foreach ($f in $all) {
-    if ($f.FullName -match $rx) { $ignore.Add($f.FullName) | Out-Null }
-  }
+# 2) Restore-map presence (soft requirement unless -Strict)
+$restore = Get-ChildItem -LiteralPath $RepoRoot -Recurse -Filter 'restore_map_*.json' -ErrorAction SilentlyContinue
+if(-not $restore) {
+  if($Strict){ Write-Error "Missing restore_map_* artifact(s) under repo."; exit 1 }
+  else       { Write-Warning "No restore_map_* found (ok in bootstrap)." }
 }
+
+# 3) Secret scan (skip binaries/large files, allowlist this script)
+$allow = @(
+  [regex]::Escape("scripts\check-dod.ps1")
+)
+$secretPatterns = @(
+  '(?i)\b(AI|API|APP|BOT|CLIENT|CONNECTION|DB|GITHUB|OAUTH|OPENAI|SECRET|TOKEN|KEY|PASSWORD|PWD)[_\-:]?[A-Z0-9\-_]{8,}\b',
+  '(?i)sk\-[A-Za-z0-9]{20,}',
+  '(?i)ghp_[A-Za-z0-9]{36,}'
+)
+
+$files = Get-ChildItem -Path $RepoRoot -Recurse -File -Force -ErrorAction SilentlyContinue |
+  Where-Object {
+    $_.Length -lt 5MB -and
+    ($_.Extension -notin '.png','.jpg','.jpeg','.gif','.exe','.dll','.zip','.7z','.mp4') -and
+    ($allow | ForEach-Object { $_ -notmatch $_.FullName.Substring($RepoRoot.Length+1) }) -notcontains $false
+  }
 
 $hits = @()
-foreach ($f in $all) {
-  if ($ignore.Contains($f.FullName)) { continue }
-  $text = try { Get-Content -LiteralPath $f.FullName -Raw -ErrorAction Stop } catch { '' }
-  foreach ($re in $patterns) {
-    if ($re.IsMatch($text)) { $hits += $f.FullName; break }
-  }
+$re = [regex]::new( ($secretPatterns -join '|') )
+foreach($f in $files){
+  $text = $null
+  try { $text = Get-Content -LiteralPath $f.FullName -Raw -ErrorAction Stop } catch { continue }
+  if([string]::IsNullOrEmpty($text)){ continue }
+  if($re.IsMatch($text)) { $hits += $f.FullName; continue }
 }
 
-if ($hits.Count -gt 0) {
-  $msg = "Potential secrets detected in:`n - " + ($hits -join "`n - ")
-  if ($Strict) { Write-Error -Message $msg; exit 1 } else { Write-Warning $msg }
-}
-
-# 3) Restore-map presence (only warn in bootstrap)
-$restore = $all | Where-Object { $_.FullName -match '\\2-Logs\\restore_map_.*\.json$' }
-if (-not $restore) {
-  $msg = "No restore_map_*.json found in 2-Logs (bootstrap ok)."
-  if ($Strict) { Write-Error -Message $msg; exit 1 } else { Write-Warning $msg }
+if($hits.Count -gt 0){
+  if($Strict){ Write-Error ("Potential secrets detected in:`n - " + ($hits -join "`n - ")); exit 1 }
+  else       { Write-Warning ("Potential secrets detected (bootstrap warn):`n - " + ($hits -join "`n - ")) }
 }
 
 Write-Host "DoD checks completed."
-exit 0

@@ -1,7 +1,4 @@
-# Brain_MegaBullets.txt (cheat-sheet)
-- PRs only; never push to main.
-- Required check: validate.
-- Enforce DoD by removing CI_BOOTSTRAP or passing -Strict.
-- Common fixes: YAML quotes/dashes; PowerShell here-strings single-quoted.
-- Secret scan false positives: ignore this script, binaries, large files.
-- Add CODEOWNERS: * @PakkByte
+- Required check: validate
+- Enforce DoD (Strict) in CI
+- PL.md at repo root, not PR body
+- Avoid binaries/large files in secret scan
