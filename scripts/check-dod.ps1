@@ -1,6 +1,9 @@
 param(
-  [string]  \,
-  [string[]]\    = @('**/2-Logs/*'),
+  [string]   $RepoRoot,
+  [string[]] $LogsGlob    = @('**/2-Logs/*'),
+  [string[]] $IgnoreGlobs = @(),
+  [switch]   $Strict
+),
   [string[]]\ = @(),
   [switch]  \
 ).Path,
@@ -148,6 +151,7 @@ if(Test-Path $prMeta){
 }
 
 Write-Host "All Core checks completed."
+
 
 
 
