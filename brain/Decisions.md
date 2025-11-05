@@ -1,6 +1,9 @@
 ArchiveBase: D:\_Archives
 MinSizeMB: 100
+SkipPaths:
+  - D:\UserData\
 Gates:
-  - PR only (1 approval)
+  - PR required with 1 approval
   - Required check: validate
-  - Signed commits (if enabled in branch rule)
+  - Signed commits
+  - Code Owners: @PakkByte

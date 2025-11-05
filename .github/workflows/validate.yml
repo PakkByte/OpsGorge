@@ -1,8 +1,10 @@
 name: OpsGorge — Validate (Enforced)
+
 on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+
 jobs:
   validate:
     name: validate
@@ -12,6 +14,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Perfection Loop gate (file-only)
         shell: pwsh
         run: |
@@ -24,6 +27,7 @@ jobs:
           $score = [int]$m.Groups[1].Value
           if ($score -lt 9) { Write-Error "PL-Score too low ($score/10)"; exit 1 }
           Write-Host "Perfection Loop gate OK (score: $score/10)."
+
       - name: Enforce Definition of Done (Strict)
         shell: pwsh
         run: |

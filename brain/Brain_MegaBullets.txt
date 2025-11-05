@@ -1,4 +1,6 @@
-- Required check: validate
-- Enforce DoD (Strict) in CI
-- PL.md at repo root, not PR body
-- Avoid binaries/large files in secret scan
+# Brain_MegaBullets.txt
+- PRs only; never push to main.
+- Required check: validate (Windows runner).
+- DoD Strict: no secrets; restore maps present for real runs.
+- Common fixes: YAML quotes/dashes; single quotes in here-strings.
+- CODEOWNERS recommended: * @PakkByte
