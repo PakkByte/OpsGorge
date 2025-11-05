@@ -6,7 +6,8 @@
     "node_modules\\",
     "bin\\",
     "obj\\",
-    "dist\\"
+    "dist\\",
+    "build\\"
   ],
   "skipExtensions": [
     ".zip",

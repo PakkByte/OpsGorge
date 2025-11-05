@@ -1,7 +1,16 @@
 {
   "ArchiveBase": "D:\\_Archives",
   "MinSizeMB": 100,
-  "SkipPaths": "D:\\UserData\\",
+  "SkipPaths": [
+    "D:\\UserData\\",
+    ".git\\",
+    ".github\\",
+    "node_modules\\",
+    "bin\\",
+    "obj\\",
+    "dist\\",
+    "build\\"
+  ],
   "DuplicateRules": {
     "MinSizeMB": 100
   }
