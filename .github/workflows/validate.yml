@@ -14,7 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Placeholder self-tests (replace later with your real script)
       - name: Schema + self-tests (placeholder)
         shell: pwsh
         run: |
@@ -23,18 +22,16 @@ jobs:
       - name: Enforce Definition of Done (Core)
         shell: pwsh
         env:
-          CI_BOOTSTRAP: "1"   # allow soft-pass during bootstrap
+          CI_BOOTSTRAP: "1"
         run: |
-          Write-Host "Checking for scripts\check-dod.ps1..."
-           = Join-Path D:\Repos\OpsGorge 'scripts\check-dod.ps1'
-          if (-not (Test-Path )) {
-            Write-Host "Not found: "
+           = "\scripts\check-dod.ps1"
+          if (Test-Path ) {
+            Write-Host "Found DoD script: "
           } else {
-            Write-Host "Found: "
+            Write-Host "DoD script NOT found: "
           }
 
-          # Run DoD and capture exit code
-          pwsh -File  -RepoRoot D:\Repos\OpsGorge
+          pwsh -File "\scripts\check-dod.ps1" -RepoRoot ""
            = 0
 
           if ( -ne 0) {
