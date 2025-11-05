@@ -1,0 +1,21 @@
+name: Validate Policy & Self-Tests
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PowerShell 7
+        uses: PowerShell/PowerShell@v1
+        with: { pwsh-version: "7.5.x" }
+
+      # TODO: Add your schema + self-test steps here if not already present
+      # - name: Schema check
+      #   shell: pwsh
+      #   run: pwsh -File .\platform\scripts\Invoke-SelfTests.ps1
+
+      - name: Enforce Definition of Done (Core)
+        shell: pwsh
+        run: pwsh -File .\scripts\check-dod.ps1 -RepoRoot $PWD
