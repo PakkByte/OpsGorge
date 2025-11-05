@@ -24,7 +24,7 @@ Get-ChildItem -Path $RepoRoot -Recurse -File -ErrorAction SilentlyContinue |
     } catch {}
   }
 if($hits.Count -gt 0){
-  Write-Error "Potential secrets detected in: `n - " + ($hits -join "`n - ")
+  Write-Error -Message ("Potential secrets detected in:`n - " + ($hits -join "`n - "))
 }
 
 # 4) Docs updated (README changed in PR) – in CI, diff check preferred; locally, ensure README exists
@@ -45,3 +45,4 @@ if(Test-Path $prMeta){
 }
 
 Write-Host "All Core checks completed."
+
