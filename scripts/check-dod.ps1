@@ -1,5 +1,9 @@
 param(
-  [string]$RepoRoot = (Resolve-Path ".").Path,
+  [string]  \,
+  [string[]]\    = @('**/2-Logs/*'),
+  [string[]]\ = @(),
+  [switch]  \
+).Path,
   [string[]]$LogsGlob = @('**/2-Logs/*')
   [switch]$VerboseOutput
 )
@@ -144,6 +148,7 @@ if(Test-Path $prMeta){
 }
 
 Write-Host "All Core checks completed."
+
 
 
 
