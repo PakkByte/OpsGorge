@@ -1,31 +1,29 @@
 name: OpsGorge — Validate (Enforced)
-
 on:
   pull_request:
     branches: [ main ]
-
+  workflow_dispatch:
 jobs:
   validate:
+    name: validate
     runs-on: windows-latest
     permissions:
       contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Perfection Loop gate (file-only)
         shell: pwsh
         run: |
           $pl = Join-Path $env:GITHUB_WORKSPACE "PL.md"
           if (-not (Test-Path $pl)) { Write-Error "PL.md missing at repo root."; exit 1 }
           $body = Get-Content $pl -Raw
-          if ($body -notmatch '(?im)^\s*##\s*Perfection Loop') { Write-Error "PL.md missing '## Perfection Loop' heading."; exit 1 }
+          if ($body -notmatch '(?im)^\s*##\s*Perfection Loop') { Write-Error "PL.md missing '## Perfection Loop'"; exit 1 }
           $m = [regex]::Match($body,'(?im)PL-Score:\s*(\d+)\s*/\s*10')
           if (-not $m.Success) { Write-Error "PL.md missing 'PL-Score: n/10'."; exit 1 }
           $score = [int]$m.Groups[1].Value
           if ($score -lt 9) { Write-Error "PL-Score too low ($score/10)"; exit 1 }
           Write-Host "Perfection Loop gate OK (score: $score/10)."
-
       - name: Enforce Definition of Done (Strict)
         shell: pwsh
         run: |
