@@ -38,7 +38,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference='Stop'; Set-StrictMode -Version Latest
-          Write-Host "::group::Perfection Loop gate"
+          Write-Host "::group::Perfection Loop gate"; Write-Host ("Event file: " + $env:GITHUB_EVENT_PATH); if (Test-Path .\PL.md){ Write-Host "Found PL.md (fallback ready)." }
           $evt  = Get-Content $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
           $body = $evt.pull_request.body
 
@@ -61,3 +61,4 @@ jobs:
 
           Write-Host "Rubric detected and PL-Score OK ($score/10)."
           Write-Host "::endgroup::"
+
