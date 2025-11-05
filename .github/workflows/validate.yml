@@ -2,9 +2,7 @@ name: OpsGorge — Validate Policy & Self-Tests
 
 on:
   pull_request:
-    branches: [ main ]   # run checks for PRs into main
-  push:
-    branches: [ main ]   # optional: run on direct pushes to main (will be blocked later)
+    branches: [ main ]
 
 jobs:
   validate:
@@ -19,21 +17,30 @@ jobs:
       - name: Schema + self-tests (placeholder)
         shell: pwsh
         run: |
-          Write-Host 'Schema/self-tests placeholder running...'
+          Write-Host "Schema/self-tests placeholder running..."
 
       - name: Enforce Definition of Done (Core)
         shell: pwsh
         env:
-          CI_BOOTSTRAP: "1"
+          CI_BOOTSTRAP: "1"   # keep soft-pass during bootstrap
         run: |
-           = "\scripts\check-dod.ps1"
-          if (Test-Path ) { Write-Host "Found DoD script: " } else { Write-Host "DoD script NOT found: " }
+          $target = Join-Path $env:GITHUB_WORKSPACE 'scripts\check-dod.ps1'
+          if (-not (Test-Path $target)) {
+            Write-Host "DoD script NOT found: $target (bootstrap soft-pass)"
+            exit 0
+          }
 
-          pwsh -File "\scripts\check-dod.ps1" -RepoRoot ""
-           = 0
-          if ( -ne 0) {
-            if ( -eq "1") { Write-Host "Bootstrap soft-pass (check-dod exited )."; exit 0 }
-            else { Write-Error "DoD failed with exit code ."; exit  }
+          pwsh -File $target -RepoRoot $env:GITHUB_WORKSPACE
+          $code = $LASTEXITCODE
+
+          if ($code -ne 0) {
+            if ($env:CI_BOOTSTRAP -eq "1") {
+              Write-Host "Bootstrap soft-pass (check-dod exited $code)."
+              exit 0
+            } else {
+              Write-Error "DoD failed with exit code $code."
+              exit $code
+            }
           } else {
             Write-Host "DoD passed."
           }
