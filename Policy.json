@@ -1,6 +1,8 @@
 {
   "ArchiveBase": "D:\\_Archives",
   "MinSizeMB": 100,
-  "SkipPaths": [ "D:\\UserData\\" ],
-  "DuplicateRules": { "MinSizeMB": 100 }
+  "SkipPaths": "D:\\UserData\\",
+  "DuplicateRules": {
+    "MinSizeMB": 100
+  }
 }
