@@ -29,3 +29,12 @@
 **/*.pdf
 **/*.db
 **/*.sqlite
+# allow code/docs inside pakks despite global ignores
+!pakks/**/*.md
+!pakks/**/*.ps1
+!pakks/**/*.psm1
+!pakks/**/*.psd1
+!pakks/**/*.sh
+!pakks/**/*.yml
+!pakks/**/*.yaml
+!pakks/**/*.json
