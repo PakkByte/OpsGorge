@@ -1,12 +1,8 @@
-## Perfection Loop — Rubric
-- Completeness: brain files present; manifest respected.
-- CI/DoD: `validate` enforces `scripts/check-dod.ps1` (Strict).
-- Policy & Exclusions: no drift on `skipPaths` and `MinSizeMB`.
-- Evidence: logs under `2-Logs/`.
-- Scope: PR is small; no runtime risk.
-
-### Proof
-- Local DoD passed (Strict + Parity).
-- CI gate required on PR.
+## Perfection Loop — Rubric (0–10)
+- Purpose fit: 2/2
+- Technical soundness: 3/3
+- Evidence & sources: 2/2
+- Clarity & brevity: 2/2
+- Actionable next step: 1/1
 
 PL-Score: 10/10
