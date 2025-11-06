@@ -1,0 +1,15 @@
+ENVELOPE v1
+FROM: <Tyler|Ops|Research|Builder>
+TO:   <Ops|Research|Builder>
+CMD:  <RUN DRY|RUN REAL|ANALYZE|BUILD PATCH|STATUS PULSE|WRITE DASHBOARD>
+ARTIFACTS:
+- type: <policy|exclusions|audit|apply_log|summary|diff|snapshot|dashboard|patch|notes>
+  name: <filename or label>
+  path: <optional>
+  body: |
+    <inline JSON / code / text, if any>
+
+RETURN:
+- ACK: ok|error + reason
+- OUT: <exact outputs requested by CMD>
+- NEXT: <who gets this next + which CMD>

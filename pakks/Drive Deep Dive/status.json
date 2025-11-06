@@ -1,0 +1,5 @@
+{
+  "core": { "done": 7, "inProgress": 3, "total": 10 },
+  "safety": { "done": 6, "inProgress": 2, "total": 8 },
+  "orch": { "done": 2, "inProgress": 0, "total": 6 }
+}

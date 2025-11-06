@@ -1,0 +1,338 @@
+{
+  "Version": "1.6.5",
+  "Generated": "2025-11-02 12:59:43",
+  "AuditMode": "Deep",
+  "PackRoot": "D:\\UserData\\Pakks\\Drive Deep Dive",
+  "QuarantineRoot": "D:\\UserData\\Pakks\\Drive Deep Dive\\3-Quarantine (Pack Specific)",
+  "ArchiveBase": "D:\\UserData\\Archives",
+  "RespectReparsePoints": true,
+  "ReparseProtectRoots": [
+    "C:\\Program Files",
+    "C:\\Program Files (x86)",
+    "T:\\SteamLibrary",
+    "T:\\Games",
+    "T:\\Steam",
+    "T:\\SteamLibrary\\steamapps"
+  ],
+  "SystemCoreExcludes": [
+    "DriverStore",
+    "WinSxS",
+    "DirectXShaderCache",
+    "WindowsApps"
+  ],
+  "DriveIntents": {
+    "C": "OS + Launchers only",
+    "D": "Archive / Cold storage",
+    "T": "Active Games + SSD apps"
+  },
+  "Canonical": {
+    "C": [
+      "C:\\Windows",
+      "C:\\Program Files",
+      "C:\\Program Files (x86)",
+      "C:\\ProgramData",
+      "C:\\Users\\<USER>"
+    ],
+    "D": [
+      "D:\\UserData",
+      "D:\\UserData\\Pakks",
+      "D:\\UserData\\Archives"
+    ],
+    "T": [
+      "T:\\Games",
+      "T:\\Autodesk",
+      "T:\\Steam",
+      "T:\\SteamLibrary",
+      "T:\\EA",
+      "T:\\Epic",
+      "T:\\Battle.net",
+      "T:\\Ubisoft",
+      "T:\\Riot",
+      "T:\\GOG Galaxy",
+      "T:\\XboxGames",
+      "T:\\Unreal",
+      "T:\\Unity"
+    ],
+    "OneDrive": []
+  },
+  "KeepPrefer": [
+    "T:\\SteamLibrary",
+    "T:\\Games",
+    "T:\\Autodesk",
+    "T:\\Revit",
+    "T:\\EA",
+    "T:\\Epic",
+    "T:\\Battle.net",
+    "T:\\Ubisoft",
+    "T:\\Riot",
+    "T:\\GOG Galaxy",
+    "C:\\Program Files",
+    "C:\\Program Files (x86)",
+    "C:\\ProgramData",
+    "D:\\UserData",
+    "D:\\UserData\\Pakks"
+  ],
+  "ProtectGlobs": [
+    "C:\\ProgramData\\**",
+    "C:\\Users\\<USER>\\AppData\\**",
+    "C:\\Users\\<USER>\\AppData\\LocalLow\\Unity\\**",
+    "C:\\Users\\<USER>\\AppData\\Roaming\\**",
+    "C:\\Users\\<USER>\\Documents\\My Games\\**",
+    "C:\\Users\\<USER>\\Saved Games\\**",
+    "C:\\Windows\\**",
+    "D:\\UserData\\**\\*.rfa",
+    "D:\\UserData\\**\\*.rvt",
+    "D:\\UserData\\Projects\\**\\.git\\**",
+    "D:\\UserData\\Projects\\**\\node_modules\\**",
+    "T:\\**\\*.cfg",
+    "T:\\**\\*.ini",
+    "T:\\**\\*.sav",
+    "T:\\**\\Saved\\**",
+    "T:\\Autodesk\\**\\*.rfa",
+    "T:\\Revit\\**\\*.rvt"
+  ],
+  "ExcludeGlobs": [
+    "C:\\$Recycle.Bin\\**",
+    "C:\\Program Files\\WindowsApps\\**",
+    "C:\\Recovery\\**",
+    "C:\\Users\\<USER>\\AppData\\Local\\Autodesk\\Revit\\**\\Journals\\**",
+    "C:\\Users\\<USER>\\AppData\\Local\\Autodesk\\Revit\\PacCache\\**",
+    "C:\\Windows\\Installer\\**",
+    "C:\\Windows\\System32\\DriverStore\\**",
+    "C:\\Windows\\WinSxS\\**",
+    "D:\\$Recycle.Bin\\**",
+    "D:\\System Volume Information\\**",
+    "D:\\WindowsApps\\**",
+    "T:\\$Recycle.Bin\\**",
+    "T:\\System Volume Information\\**",
+    "T:\\WindowsApps\\**"
+  ],
+  "FileTypeBuckets": {
+    "Installers": [
+      "*.exe",
+      "*.msi",
+      "*.msp",
+      "*.msix",
+      "*.cab",
+      "*.zip",
+      "*.7z",
+      "*.rar"
+    ],
+    "Documents": [
+      "*.pdf",
+      "*.doc",
+      "*.docx",
+      "*.xls",
+      "*.xlsx",
+      "*.ppt",
+      "*.pptx",
+      "*.txt",
+      "*.md",
+      "*.csv"
+    ],
+    "Images": [
+      "*.png",
+      "*.jpg",
+      "*.jpeg",
+      "*.gif",
+      "*.bmp",
+      "*.tif",
+      "*.tiff",
+      "*.webp",
+      "*.svg"
+    ],
+    "Audio": [
+      "*.mp3",
+      "*.flac",
+      "*.wav",
+      "*.aac",
+      "*.ogg",
+      "*.m4a"
+    ],
+    "Video": [
+      "*.mp4",
+      "*.mkv",
+      "*.mov",
+      "*.avi",
+      "*.wmv",
+      "*.webm"
+    ],
+    "CAD_BIM": [
+      "*.rvt",
+      "*.rfa",
+      "*.rte",
+      "*.dwg",
+      "*.dxf",
+      "*.ifc"
+    ],
+    "Archives": [
+      "*.zip",
+      "*.7z",
+      "*.rar",
+      "*.tar",
+      "*.gz",
+      "*.tgz"
+    ],
+    "GameAssets": [
+      "*.pak",
+      "*.utoc",
+      "*.ucas",
+      "*.pck",
+      "*.bundle",
+      "*.pakchunk*"
+    ],
+    "TempJunk": [
+      "*.tmp",
+      "*.temp",
+      "*.crdownload",
+      "*.part",
+      "thumbs.db",
+      "desktop.ini"
+    ]
+  },
+  "RelocateDefaults": {
+    "C_Media": "D:\\UserData\\Media",
+    "C_Documents": "D:\\UserData",
+    "C_Downloads": "D:\\UserData",
+    "T_Installers": "D:\\UserData\\Archives\\Installers",
+    "T_Media": "D:\\UserData\\Media",
+    "D_GameDumps": "D:\\UserData\\Archives\\Games_Cold"
+  },
+  "WindowsAppsPolicy": {
+    "Archive_D_IfNoAppx": true,
+    "Archive_T_IfNoAppx": true,
+    "Keep_T_WhileActive": true,
+    "EmitPFNMap": true
+  },
+  "DuplicateRules": {
+    "GroupBy": "hash",
+    "HashAlgo": "SHA256",
+    "PreferPaths": [
+      "T:\\",
+      "D:\\",
+      "C:\\"
+    ],
+    "MinSizeMB": 75,
+    "BucketMinSizeMB": 1,
+    "NewerWinsOnTie": true,
+    "MaxHashGB": 150
+  },
+  "HashHygiene": {
+    "SkipFilesUnderKB": 512,
+    "Note": "Files smaller than this are ignored in duplicate hashing."
+  },
+  "MinSizeMB_Audit": 75,
+  "MinPurgeSizeMB": 10,
+  "QuarantineRetentionDays": 30,
+  "DenyUnknownTRoots": true,
+  "DriveOverrides": {
+    "C": {
+      "DisallowBuckets": [
+        "GameAssets",
+        "TempJunk"
+      ]
+    },
+    "D": {
+      "PreferBuckets": [
+        "Archives",
+        "Images",
+        "Video",
+        "Audio",
+        "Documents"
+      ]
+    },
+    "T": {
+      "PreferBuckets": [
+        "GameAssets",
+        "CAD_BIM"
+      ],
+      "DisallowBuckets": [
+        "Installers",
+        "Archives"
+      ]
+    }
+  },
+  "Classifiers": [
+    {
+      "Name": "InstallerDumps",
+      "If": {
+        "Bucket": "Installers",
+        "Under": "T:\\"
+      },
+      "Then": {
+        "RelocateTo": "D:\\UserData\\Archives\\Installers"
+      }
+    },
+    {
+      "Name": "OldGameDumpsOnD",
+      "If": {
+        "Bucket": "GameAssets",
+        "Under": "D:\\UserData"
+      },
+      "Then": {
+        "Suggest": "Restore to T canonical or cold-archive to D:\\UserData\\Archives\\Games_Cold"
+      }
+    },
+    {
+      "Name": "ArchiveInstallerDump",
+      "If": {
+        "Bucket": "Archives",
+        "LooksLikeInstallerDump": true,
+        "Under": "T:\\"
+      },
+      "Then": {
+        "RelocateTo": "D:\\UserData\\Archives\\Installers"
+      }
+    }
+  ],
+  "HygieneAdvice": {
+    "CheckMisplacedRoots": true,
+    "CheckWindowsApps": true,
+    "FlagStrayVendors": [
+      "Medal",
+      "OBS Studio",
+      "ICue",
+      "MSI Afterburner",
+      "NVIDIA CONTENT",
+      "Program Data",
+      "Temp"
+    ],
+    "SeverityColors": {
+      "Critical": "Red",
+      "Moderate": "Yellow"
+    }
+  },
+  "PolicyHashSHA256": "fa171a2ea3eab1afdb256a801be9db464b0afcd4f29447cee04bfdc697bebcab",
+  "PolicyInvariantSHA256": "efd4796cb51c5fe6c99bbae3bc490a653d54c7a58f8a31e9e9eb5ad8d9979e07",
+  "MetaBase": {
+    "Signature": "PakksByte",
+    "Comment": "Drive Deep Dive \u2014 TightLock Policy Framework"
+  },
+  "BlockMountPointTraversal": true,
+  "Preserve": {
+    "ACL": true,
+    "ADS": true
+  },
+  "PathOptions": {
+    "UseWin32LongPaths": true,
+    "UnicodeNormalization": "NFC"
+  },
+  "MoveStrategy": {
+    "Mode": "CopyVerifyThenSwap",
+    "MaxRetries": 3,
+    "RetryDelayMs": 750
+  },
+  "CloudAware": {
+    "SkipUnhydrated": true,
+    "HydrateBeforeHash": false
+  },
+  "NearDupes": {
+    "Enabled": true,
+    "SizeTolerancePct": 1
+  },
+  "AuditEmit": {
+    "SteamManifests": true,
+    "EpicManifests": true,
+    "UbisoftInstalls": true
+  }
+}

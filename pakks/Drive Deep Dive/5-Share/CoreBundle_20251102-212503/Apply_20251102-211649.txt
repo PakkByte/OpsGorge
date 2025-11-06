@@ -1,0 +1,42 @@
+**********************
+PowerShell transcript start
+Start time: 20251102211649
+Username: HOME-LAB\tyler
+RunAs User: HOME-LAB\tyler
+Configuration Name: 
+Machine: HOME-LAB (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Program Files\PowerShell\7\pwsh.dll
+Process ID: 25132
+PSVersion: 7.5.4
+PSEdition: Core
+GitCommitId: 7.5.4
+OS: Microsoft Windows 10.0.26200
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1, 6.0, 7.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+>>> Using audit: D:\UserData\Pakks\Drive Deep Dive\2-Logs\cleanup_audit_filtered_20251102-211649.json
+>>> RunStamp:    20251102-211649
+>>> Quarantine:  D:\UserData\Pakks\Drive Deep Dive\3-Quarantine (Pack Specific)\Run_20251102-211649
+>>> Archive:     D:\_Archives\T-nonGames_20251102-211649
+>>> Mode:
+DRY RUN (-WhatIf)
+>>> MinSizeMB:   100 MB
+
+-- SKIP (Keep/Link): 1 items
+
+== SUMMARY ==
+Archived     : 0
+DeadLnk      : 0
+Duplicates   : 0
+KeepOrLink   : 1
+StaleUninst  : 0
+
+DRY RUN complete. Re-run with -Execute to apply changes.
+[map] Restore mapping -> D:\UserData\Pakks\Drive Deep Dive\2-Logs\restore_map_20251102-211649.json  (items: 0)
+**********************
+PowerShell transcript end
+End time: 20251102211649
+**********************
