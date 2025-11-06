@@ -1,0 +1,12 @@
+# Binaries / caches / logs / temp
+2-Logs/
+3-Quarantine (Pack Specific)/
+4-Restores/
+Archive/
+_Drafts/
+*.tmp
+*.bak
+
+# OS junk
+Thumbs.db
+.DS_Store

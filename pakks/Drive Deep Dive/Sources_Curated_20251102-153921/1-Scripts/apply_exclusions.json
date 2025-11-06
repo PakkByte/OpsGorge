@@ -1,0 +1,12 @@
+{
+  "skipPaths": [
+    "D:\\UserData\\",
+    "D:\\RedM\\",
+    "T:\\Games\\",
+    "T:\\Autodesk\\",
+    "D:\\UserData\\Pakks\\",
+    "D:\\UserData\\Documents\\",
+    "D:\\UserData\\Desktop\\"
+  ],
+  "skipTypes": []
+}

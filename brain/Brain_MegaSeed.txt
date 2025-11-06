@@ -1,0 +1,6 @@
+# Brain_MegaSeed.txt
+- Name: OpsGorge (C+)
+- Required check: validate
+- DoD: scripts/check-dod.ps1 (Strict)
+- Style: crisp headings, short bullets, numbered steps, end with “Next steps.”
+- Macros: DoD Gate, Perfection Loop, Router Nudge, XML Sandwich

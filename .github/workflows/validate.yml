@@ -1,46 +1,66 @@
-name: OpsGorge — Validate Policy & Self-Tests
+name: validate
 
 on:
   pull_request:
-    branches: [ main ]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: validate-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
 
 jobs:
   validate:
     runs-on: windows-latest
-    permissions:
-      contents: read
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Schema + self-tests (placeholder)
+      - name: Show PowerShell version (sanity)
+        shell: pwsh
+        run: '$PSVersionTable.PSVersion'
+
+      - name: Definition of Done (Strict)
+        shell: pwsh
+        run: pwsh -NoProfile -File .\scripts\check-dod.ps1 -Strict
+
+      - name: Policy vs Exclusions (Parity)
+        shell: pwsh
+        run: pwsh -NoProfile -File .\scripts\check-dod.ps1 -ComparePolicyExclusions -Strict
+
+      - name: Perfection Loop gate (rubric + score ≥9/10; PR body → fallback to PL.md)
         shell: pwsh
         run: |
-          Write-Host "Schema/self-tests placeholder running..."
+          $ErrorActionPreference='Stop'; Set-StrictMode -Version Latest
+          Write-Host "::group::Perfection Loop gate"; Write-Host ("Event file: " + $env:GITHUB_EVENT_PATH); if (Test-Path .\PL.md){ Write-Host "Found PL.md (fallback ready)." }
+          $evt  = Get-Content $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
+          $body = $evt.pull_request.body
 
-      - name: Enforce Definition of Done (Core)
-        shell: pwsh
-        env:
-          CI_BOOTSTRAP: "1"   # keep soft-pass during bootstrap
-        run: |
-          $target = Join-Path $env:GITHUB_WORKSPACE 'scripts\check-dod.ps1'
-          if (-not (Test-Path $target)) {
-            Write-Host "DoD script NOT found: $target (bootstrap soft-pass)"
-            exit 0
-          }
-
-          pwsh -File $target -RepoRoot $env:GITHUB_WORKSPACE
-          $code = $LASTEXITCODE
-
-          if ($code -ne 0) {
-            if ($env:CI_BOOTSTRAP -eq "1") {
-              Write-Host "Bootstrap soft-pass (check-dod exited $code)."
-              exit 0
-            } else {
-              Write-Error "DoD failed with exit code $code."
-              exit $code
+          if (-not $body -or $body.Trim().Length -eq 0) {
+            if (Test-Path .\PL.md) {
+              Write-Host "PR body empty; falling back to PL.md"
+              $body = Get-Content .\PL.md -Raw
             }
-          } else {
-            Write-Host "DoD passed."
           }
+
+          if (-not $body -or $body.Trim().Length -eq 0) { Write-Error "PR body empty and PL.md missing/empty." }
+
+          $hasRubric = ($body -match '(?i)Perfection\s*Loop') -or ($body -match '(?i)Rubric')
+          if (-not $hasRubric) { Write-Error "Missing rubric section." }
+
+          $m = [regex]::Match($body,'PL-Score:\s*(\d+)\s*/\s*10','IgnoreCase')
+          if (-not $m.Success) { Write-Error "Missing PL-Score line (e.g., 'PL-Score: 10/10')." }
+          $score = [int]$m.Groups[1].Value
+          if ($score -lt 9) { Write-Error "PL-Score is $score/10 (must be ≥ 9/10)." }
+
+          Write-Host "Rubric detected and PL-Score OK ($score/10)."
+          Write-Host "::endgroup::"
+
+
+

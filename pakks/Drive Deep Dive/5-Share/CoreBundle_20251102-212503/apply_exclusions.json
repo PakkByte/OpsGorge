@@ -1,0 +1,17 @@
+{
+  "skipPaths": [
+    "D:\\UserData\\Pakks\\**",
+    "D:\\UserData\\Archives\\**",
+    "D:\\UserData\\Documents\\**",
+    "D:\\UserData\\Desktop\\**",
+    "D:\\UserData\\Projects\\**",
+    "D:\\UserData\\Media\\**",
+    "T:\\SteamLibrary\\steamapps\\**",
+    "T:\\XboxGames\\**",
+    "T:\\Autodesk\\**",
+    "T:\\EA\\**",
+    "T:\\Epic\\**",
+    "T:\\Ubisoft\\**"
+  ],
+  "skipTypes": []
+}

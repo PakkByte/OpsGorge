@@ -1,0 +1,16 @@
+{
+  "Version": "1.6.5",
+  "MinSizeMB": 100,
+  "Canonicals": [],
+  "KeepPrefer": [
+    "T:\\\\Games",
+    "T:\\\\Autodesk",
+    "D:\\\\UserData\\\\Pakks",
+    "D:\\\\UserData\\\\Documents"
+  ],
+  "RelocateDefaults": [
+    { "WhenUnder": "D:\\\\*\\\\SteamLibrary", "SendTo": "T:\\\\Games\\\\SteamLibrary" },
+    { "WhenUnder": "D:\\\\Downloads\\\\Installers", "SendTo": "D:\\\\Archives\\\\Installers" },
+    { "WhenUnder": "D:\\\\Old\\\\*", "SendTo": "D:\\\\Archives" }
+  ]
+}

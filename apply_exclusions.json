@@ -1,0 +1,24 @@
+{
+  "skipPaths": [
+    "D:\\UserData\\",
+    ".git\\",
+    ".github\\",
+    "node_modules\\",
+    "bin\\",
+    "obj\\",
+    "dist\\",
+    "build\\"
+  ],
+  "skipExtensions": [
+    ".zip",
+    ".7z",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".mp4",
+    ".exe",
+    ".dll"
+  ],
+  "MinSizeMB": 100
+}

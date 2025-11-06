@@ -1,0 +1,23 @@
+name: validate
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup PowerShell
+        uses: PowerShell/PowerShell@v1
+        with:
+          version: '7.4.x'
+      - name: Definition of Done (Strict)
+        shell: pwsh
+        run: pwsh -NoProfile -File .\scripts\check-dod.ps1 -Strict
+      - name: Policy vs Exclusions (Parity)
+        shell: pwsh
+        run: pwsh -NoProfile -File .\scripts\check-dod.ps1 -ComparePolicyExclusions -Strict

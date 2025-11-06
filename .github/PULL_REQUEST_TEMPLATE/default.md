@@ -1,15 +1,8 @@
-## Summary
-What changed and why?
+## Perfection Loop — Rubric (0–10)
+- Purpose fit: /2
+- Technical soundness: /3
+- Evidence & sources: /2
+- Clarity & brevity: /2
+- Actionable next step: /1
 
-## Self-Audit (Core must pass)
-- [ ] Signed commit to protected `main` (or PR target)
-- [ ] CI schema + self-tests passed
-- [ ] No secrets / least-privilege confirmed
-- [ ] README/runbook updated
-- [ ] Logs + restore-map present (link below)
-- [ ] Issue/Changelog linked
-
-## Evidence
-- CI run: <link>
-- Logs/restore-map: <link>
-- Fixes: #<issue>
+PL-Score: /10

@@ -1,0 +1,40 @@
+# Secrets
+*.env
+*.key
+*.pem
+*.pfx
+
+# Caches / envs / deps
+**/__pycache__/**
+**/.venv/**
+**/node_modules/**
+**/.idea/**
+**/.vscode/**
+
+# Logs / exports / big artifacts
+**/2-Logs/**
+**/logs/**
+**/*.log
+**/*.csv
+**/*.zip
+**/*.7z
+**/*.rar
+**/*.iso
+**/*.exe
+**/*.msi
+**/*.mp4
+**/*.mov
+**/*.jpg
+**/*.png
+**/*.pdf
+**/*.db
+**/*.sqlite
+# allow code/docs inside pakks despite global ignores
+!pakks/**/*.md
+!pakks/**/*.ps1
+!pakks/**/*.psm1
+!pakks/**/*.psd1
+!pakks/**/*.sh
+!pakks/**/*.yml
+!pakks/**/*.yaml
+!pakks/**/*.json
