@@ -38,3 +38,7 @@
 !pakks/**/*.yml
 !pakks/**/*.yaml
 !pakks/**/*.json
+
+# local helpers
+pr_body.md
+protection_*.json
