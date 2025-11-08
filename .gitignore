@@ -39,6 +39,13 @@
 !pakks/**/*.yml
 !pakks/**/*.yaml
 !pakks/**/*.json
+!2-Logs/
+!2-Logs/deep_inventory_refs_*/
+!2-Logs/deep_inventory_refs_*/summary.md
+
+!2-Logs/
+!2-Logs/name_signal_refs_*/
+!2-Logs/name_signal_refs_*/summary.md
 
 # — Evidence-only allowlist inside 2-Logs —
 !2-Logs/deep_inventory_refs_*/
