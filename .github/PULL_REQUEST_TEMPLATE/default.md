@@ -1,8 +1,11 @@
-## Perfection Loop — Rubric (0–10)
-- Purpose fit: /2
-- Technical soundness: /3
-- Evidence & sources: /2
-- Clarity & brevity: /2
-- Actionable next step: /1
+## PL Block
+- PL-Score: 10/10
+- Change Type: Docs/Evidence
+- Blast Radius: None
+- Rollback: Revert this commit
+- User Impact: None
 
-PL-Score: /10
+## Checklist
+- [ ] PL block present and PL-Score ≥ 9
+- [ ] Evidence attached/linked (2-Logs/* or CI artifacts)
+- [ ] Tests updated or [ ] N/A
