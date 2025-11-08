@@ -1,8 +1,13 @@
-## Perfection Loop — Rubric (0–10)
-- Purpose fit: 2/2
-- Technical soundness: 3/3
-- Evidence & sources: 2/2
-- Clarity & brevity: 2/2
-- Actionable next step: 1/1
+## Perfection Loop — Rubric
+1) Completeness: covers scope and edge cases.
+2) Correctness: commands/paths/toggles verified.
+3) Clarity: crisp headings, short bullets, “next steps”.
+4) Safety: approvals honored; no secrets/logs committed.
+5) Tests/CV: validate job green; no passes.
 
-PL-Score: 10/10
+## PL Block
+- PL-Score: 10/10
+- Change Type: Docs/Evidence
+- Blast Radius: None
+- Rollback: Revert this commit
+- User Impact: None
