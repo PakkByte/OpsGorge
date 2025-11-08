@@ -38,3 +38,6 @@
 !pakks/**/*.yml
 !pakks/**/*.yaml
 !pakks/**/*.json
+!2-Logs/
+!2-Logs/deep_inventory_refs_*/
+!2-Logs/deep_inventory_refs_*/summary.md
