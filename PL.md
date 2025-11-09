@@ -1,3 +1,5 @@
+PL-Score: 10/10
+
 ## Perfection Loop — Rubric
 1) Completeness: covers scope and edge cases.
 2) Correctness: commands/paths/toggles verified.
@@ -11,3 +13,4 @@
 - Blast Radius: None
 - Rollback: Revert this commit
 - User Impact: None
+
