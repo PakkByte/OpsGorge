@@ -1,11 +1,14 @@
-## PL Block
-- PL-Score: 10/10
-- Change Type: Docs/Evidence
-- Blast Radius: None
-- Rollback: Revert this commit
-- User Impact: None
+## Summary
+<one line>
 
-## Checklist
-- [ ] PL block present and PL-Score ≥ 9
-- [ ] Evidence attached/linked (2-Logs/* or CI artifacts)
-- [ ] Tests updated or [ ] N/A
+## Evidence
+- <what changed / where>
+
+## Perfection Loop — Rubric
+1. Completeness
+2. Correctness
+3. Clarity
+4. Safety
+5. Tests/CV
+
+PL-Score: 10/10
