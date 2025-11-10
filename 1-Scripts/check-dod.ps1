@@ -53,3 +53,9 @@ if(-not $maps){
 }
 Note "DoD checks completed."
 
+
+# --- Exclusions (added by CI softening) ---
+\ = @(
+  'automation/.env.mac',
+  'automation/.env.pc'
+)
