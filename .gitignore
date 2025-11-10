@@ -25,3 +25,6 @@ automation/workflows/n8n-data/nodes/node_modules/
 # env files (only sample tracked)
 automation/.env*
 !automation/.env*.sample
+# env files (only sample tracked)
+automation/.env*
+!automation/.env*.sample
