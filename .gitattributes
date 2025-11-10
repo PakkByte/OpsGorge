@@ -1,3 +1,13 @@
 * text=auto
-*.ps1 text eol=lf
-*.md  text eol=lf
+
+# Windows scripts
+*.ps1  eol=crlf
+*.psm1 eol=crlf
+*.bat  eol=crlf
+
+# Unix-ish files
+*.sh   eol=lf
+*.yml  eol=lf
+*.yaml eol=lf
+*.json eol=lf
+*.md   eol=lf

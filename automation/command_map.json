@@ -1,0 +1,4 @@
+{
+  "run_audit": "/webhook/run_audit",
+  "open_pr": "/webhook/open_pr"
+}

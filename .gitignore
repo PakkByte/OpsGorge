@@ -1,57 +1,30 @@
-# Secrets
-*.env
-*.key
-*.pem
-*.pfx
+# OS/editor
+.DS_Store
+Thumbs.db
 
-# Caches / envs / deps
-**/__pycache__/**
-**/.venv/**
-**/node_modules/**
-**/.idea/**
-**/.vscode/**
+# Node/cache
+node_modules/
+npm-debug.log*
 
-# Logs / exports / big artifacts
-**/2-Logs/**
-**/logs/**
-**/*.log
-**/*.csv
-**/*.zip
-**/*.7z
-**/*.rar
-**/*.iso
-**/*.exe
-**/*.msi
-**/*.mp4
-**/*.mov
-**/*.jpg
-**/*.png
-**/*.gif
-**/*.db
-**/*.sqlite
+# Python
+__pycache__/
 
-# allow code/docs inside pakks despite global ignores
-!pakks/**/*.md
-!pakks/**/*.ps1
-!pakks/**/*.psm1
-!pakks/**/*.psd1
-!pakks/**/*.sh
-!pakks/**/*.yml
-!pakks/**/*.yaml
-!pakks/**/*.json
-!2-Logs/
-!2-Logs/deep_inventory_refs_*/
-!2-Logs/deep_inventory_refs_*/summary.md
+# Local env
+.env
+.env.*
 
-!2-Logs/
-!2-Logs/name_signal_refs_*/
-!2-Logs/name_signal_refs_*/summary.md
+# === runtime artifacts (never commit) ===
+automation/ollama/models/
+automation/workflows/n8n-data/crash.journal
+automation/workflows/n8n-data/imports/
+automation/workflows/n8n-data/nodes/node_modules/
 
-# — Evidence-only allowlist inside 2-Logs —
-!2-Logs/deep_inventory_refs_*/
-!2-Logs/deep_inventory_refs_*/summary.md
-!2-Logs/name_signal_refs_*/
-!2-Logs/name_signal_refs_*/summary.md
-
-
-!2-Logs/restore_map_init.json
+# Misc
+*.tar
+*.tmp
+# env files (only sample tracked)
+automation/.env*
+!automation/.env*.sample
+# env files (only sample tracked)
+automation/.env*
+!automation/.env*.sample

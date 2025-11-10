@@ -1,0 +1,9 @@
+# === Vendor/locale/log noise (regex; case-insensitive) ======================
+(?i)\\obs-studio\\.*\\(locale|data\\locale)\\
+(?i)\\MSI Afterburner\\.*\\(Localization|Profiles\\.*\\Localization)\\
+(?i)\\NVIDIA\\.*\\(DisplayDriver|GFExperience)\\.*\\(International|locale)\\
+(?i)\\Autodesk\\.*\\fallback_docs\\
+(?i)\\Corsair iCUE5 Software\\.*\\(cue_qml_plugins|tmp\\download)\\
+# Optional (uncomment if you want these ignored too)
+# (?i)\\Govee\\.*\\logs\\
+# (?i)\\Razer\\.*\\logs\\
