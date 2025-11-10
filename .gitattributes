@@ -1,3 +1,11 @@
+# Auto text normalization
 * text=auto
-*.ps1 text eol=lf
-*.md  text eol=lf
+
+# Windows scripts
+*.ps1 eol=crlf
+
+# Unixy files
+*.sh  eol=lf
+*.yml eol=lf
+*.yaml eol=lf
+*.json eol=lf
