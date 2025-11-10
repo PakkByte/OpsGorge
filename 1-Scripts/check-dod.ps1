@@ -1,3 +1,10 @@
+# --- Exclusions injected by CI softening ---
+# Never scan env files; only track their *.sample variants in git.
+\ = @(
+  'automation/.env',
+  'automation/.env.mac',      'automation/.env.mac.local',   'automation/.env.mac.sample',
+  'automation/.env.pc',       'automation/.env.pc.local',    'automation/.env.pc.sample'
+)
 [CmdletBinding()]
 param(
   [switch]$Strict,
@@ -59,3 +66,4 @@ Note "DoD checks completed."
   'automation/.env.mac',
   'automation/.env.pc'
 )
+
