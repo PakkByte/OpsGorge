@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Open PR Webhook",
+    "type": "Webhook",
+    "url": "/webhook/open_pr",
+    "method": "POST",
+    "auth": "None",
+    "body": { "parse": "JSON" },
+    "onFail": "Send to DLQ"
+  },
+  {
+    "name": "Check Idempotency",
+    "type": "Code",
+    "script": "if (await checkIfPRExists(branch)) throw new Error('Duplicate PR');"
+  },
+  {
+    "name": "Create Branch",
+    "type": "Shell",
+    "script": "git checkout -b $json.branch"
+  },
+  {
+    "name": "Write Files",
+    "type": "Function",
+    "script": "decodeAndWriteFiles($json.changes)"
+  },
+  {
+    "name": "Commit Changes",
+    "type": "Shell",
+    "script": "git add . && git commit -m 'Add PR artifacts'"
+  },
+  {
+    "name": "Push + Open PR",
+    "type": "HTTP Request",
+    "url": "https://api.github.com/repos/<owner>/<repo>/pulls",
+    "method": "POST",
+    "auth": "GitHub Secrets",
+    "body": {
+      "title": "Fix: " + $json.branch,
+      "head": "$json.branch",
+      "base": "main",
+      "body": "decode($json.pr_body_md_base64)"
+    }
+  },
+  {
+    "name": "Return PR Status",
+    "type": "Respond to Webhook",
+    "response": {
+      "ok": true,
+      "pr_url": "$json.pr_url",
+      "ci_status": "pending"
+    }
+  },
+  {
+    "name": "Send to DLQ",
+    "type": "Queue",
+    "queue": "DLQ_open_pr"
+  }
+]

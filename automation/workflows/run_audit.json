@@ -1,0 +1,49 @@
+[
+  {
+    "name": "Run Audit Webhook",
+    "type": "Webhook",
+    "url": "/webhook/run_audit",
+    "method": "POST",
+    "auth": "None",
+    "body": { "parse": "JSON" },
+    "onFail": "Send to DLQ"
+  },
+  {
+    "name": "Check Idempotency",
+    "type": "Code",
+    "script": "if (await checkIfRunExists(run_id)) throw new Error('Duplicate run');"
+  },
+  {
+    "name": "Hash Inputs",
+    "type": "Function",
+    "script": "inputs_hash = hash(JSON.stringify($json.args));"
+  },
+  {
+    "name": "Call Local LLM (Optional)",
+    "type": "HTTP Request",
+    "url": "http://localhost:11434/api/generate",
+    "method": "POST",
+    "body": { "prompt": "Run audit for: " + $json.args.area },
+    "optional": true
+  },
+  {
+    "name": "Generate Log File",
+    "type": "Function",
+    "script": "writeLog(run_id, {...});"
+  },
+  {
+    "name": "Return Output",
+    "type": "Respond to Webhook",
+    "response": {
+      "ok": true,
+      "run_id": "$json.run_id",
+      "summary": "Audit run completed",
+      "artifacts": ["2-Logs/run_....md", "2-Logs/run_....json"]
+    }
+  },
+  {
+    "name": "Send to DLQ",
+    "type": "Queue",
+    "queue": "DLQ_run_audit"
+  }
+]
