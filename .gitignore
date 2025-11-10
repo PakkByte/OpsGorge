@@ -62,3 +62,10 @@ automation/workflows/n8n-data/imports/
 automation/workflows/n8n-data/nodes/node_modules/
 *.tar
 *.tmp
+# === runtime artifacts (never commit) ===
+automation/ollama/models/
+automation/workflows/n8n-data/crash.journal
+automation/workflows/n8n-data/imports/
+automation/workflows/n8n-data/nodes/node_modules/
+*.tar
+*.tmp
