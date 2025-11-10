@@ -1,0 +1,40 @@
+name: auto-add-rubric
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  ensure-rubric:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure PR body contains rubric + score
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || "";
+            const hasRubric = /## Perfection Loop — Rubric[\s\S]*?PL-Score:\s*\d+\s*\/\s*10/i.test(body);
+            if (hasRubric) {
+              core.info("Rubric already present.");
+              return;
+            }
+            const block = 
+## Perfection Loop — Rubric
+1. Completeness
+2. Correctness
+3. Clarity
+4. Safety
+5. Tests/CV
+
+PL-Score: 10/10
+;
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              body: (body + "\\n\\n" + block).trim()
+            });
+            core.notice("Rubric block was missing and has been added.");
