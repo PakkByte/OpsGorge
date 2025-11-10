@@ -63,3 +63,5 @@ pakks/Drive Deep Dive/hash_cache.csv
 # === platform noise ===
 .DS_Store
 Thumbs.db
+# local golden overrides (never commit)
+config/golden.local/
