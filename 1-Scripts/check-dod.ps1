@@ -52,3 +52,4 @@ if(-not $maps){
   else{ try{ Get-Content -LiteralPath $init -Raw | ConvertFrom-Json -ErrorAction Stop | Out-Null }catch{ Fail "restore_map_init.json invalid JSON." } }
 }
 Note "DoD checks completed."
+
