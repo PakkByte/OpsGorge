@@ -22,3 +22,6 @@ automation/workflows/n8n-data/nodes/node_modules/
 # Misc
 *.tar
 *.tmp
+# env files (only sample tracked)
+automation/.env*
+!automation/.env*.sample
