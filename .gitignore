@@ -28,3 +28,13 @@ automation/.env*
 # env files (only sample tracked)
 automation/.env*
 !automation/.env*.sample
+# === runtime & machine-local ===
+automation/workflows/n8n-data/
+!automation/workflows/exports/
+automation/ollama/models/
+automation/.env
+automation/.env.*.local
+2-Logs/
+*.sqlite
+*.log
+*.zip
