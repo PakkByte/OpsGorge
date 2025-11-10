@@ -28,3 +28,40 @@ automation/.env*
 # env files (only sample tracked)
 automation/.env*
 !automation/.env*.sample
+# === runtime & machine-local ===
+automation/workflows/n8n-data/
+!automation/workflows/exports/
+automation/ollama/models/
+automation/.env
+automation/.env.*.local
+2-Logs/
+*.sqlite
+*.log
+*.zip
+# === runtime & machine-local ===
+automation/workflows/n8n-data/
+!automation/workflows/exports/
+automation/ollama/models/
+automation/.env
+automation/.env.*.local
+2-Logs/
+*.sqlite
+*.log
+*.zip
+
+# === drive-deep-dive local archives (keep these local unless explicitly whitelisted) ===
+pakks/Drive Deep Dive/Archive/
+pakks/Drive Deep Dive/hash_cache.csv
+
+# === big artifacts (choose Releases/cloud storage instead of git) ===
+*.tar
+*.tmp
+*.bak
+*.7z
+*.rar
+
+# === platform noise ===
+.DS_Store
+Thumbs.db
+# local golden overrides (never commit)
+config/golden.local/
