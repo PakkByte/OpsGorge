@@ -1,1 +1,6 @@
-services: {}
+services:
+  n8n:
+    env_file:
+      - .env
+      - .env.shared
+      - .env.mac.local
