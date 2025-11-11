@@ -8,8 +8,6 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -36,12 +34,7 @@ services:
       - N8N_SECURE_COOKIE=${N8N_SECURE_COOKIE}
       - N8N_METRICS=${N8N_METRICS}
       - N8N_LOG_LEVEL=${N8N_LOG_LEVEL}
-    volumes:
-      - ./workflows/n8n-data:/home/node/.n8n
-      - ./workflows/n8n-files:/files
-    depends_on:
-      postgres:
-        condition: service_healthy
 
 volumes:
   postgres_data:
+    external: true
