@@ -1,4 +1,37 @@
 services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5555:5678"
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: true
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: "5432"
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: n8n
+      N8N_LOG_LEVEL: info
+      N8N_PROTOCOL: http
+      N8N_PORT: 5678
+      N8N_HOST: "localhost"
+    volumes:
+      - type: bind
+        source: ./workflows/n8n-data
+        target: /home/node/.n8n
+        bind:
+          create_host_path: true
+      - type: bind
+        source: ./workflows/n8n-files
+        target: /files
+        bind:
+          create_host_path: true
+
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
@@ -6,12 +39,6 @@ services:
     ports:
       - "11434:11434"
     command: serve
-    environment:
-      - OLLAMA_KEEP_ALIVE=1h
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-    volumes:
-      - ./ollama/models:/root/.ollama
     deploy:
       resources:
         reservations:
@@ -19,42 +46,3 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-
-  postgres:
-    image: postgres:16-alpine
-    container_name: postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: n8n
-      POSTGRES_PASSWORD: n8n
-      POSTGRES_DB: n8n
-    volumes:
-      - postgres_data_pc:/var/lib/postgresql/data
-
-  n8n:
-    image: n8nio/n8n:latest
-    container_name: n8n
-    restart: unless-stopped
-    ports:
-      - "5678:5678"
-    environment:
-      DB_TYPE: postgresdb
-      DB_POSTGRESDB_HOST: postgres
-      DB_POSTGRESDB_PORT: 5432
-      DB_POSTGRESDB_DATABASE: n8n
-      DB_POSTGRESDB_USER: n8n
-      DB_POSTGRESDB_PASSWORD: n8n
-      GENERIC_TIMEZONE: America/Chicago
-      N8N_EDITOR_BASE_URL: http://localhost:5678
-    depends_on:
-      - postgres
-
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared
-    restart: unless-stopped
-    command: tunnel --no-autoupdate --url http://n8n:5678
-
-volumes:
-  postgres_data_pc:
-    external: true
