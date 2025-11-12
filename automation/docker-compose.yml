@@ -4,21 +4,16 @@ services:
     container_name: postgres
     restart: unless-stopped
     environment:
-<<<<<<< Updated upstream
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-=======
-      POSTGRES_USER: n8n
-      POSTGRES_PASSWORD: n8n
-      POSTGRES_DB: n8n
->>>>>>> Stashed changes
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U n8n -d n8n"]
       interval: 10s
       timeout: 5s
       retries: 5
-<<<<<<< Updated upstream
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   n8n:
     image: n8nio/n8n:latest
@@ -40,15 +35,30 @@ services:
       - N8N_SECURE_COOKIE=${N8N_SECURE_COOKIE}
       - N8N_METRICS=${N8N_METRICS}
       - N8N_LOG_LEVEL=${N8N_LOG_LEVEL}
-
-volumes:
-  postgres_data:
-    external: true
-=======
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - type: bind
+        source: D:\Repos\OpsGorge\automation\workflows\n8n-data
+        target: /home/node/.n8n
+      - type: bind
+        source: D:\Repos\OpsGorge\automation\workflows\n8n-files
+        target: /files
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    command:
+      - serve
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: -1
+              capabilities: [gpu]
 
 volumes:
   postgres_data:
     name: automation_postgres_data
->>>>>>> Stashed changes
